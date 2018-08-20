@@ -3,45 +3,27 @@
 ?>
 
 <?php
-
-    //var_dump($_POST);
-
-    $API_KEY="AIzaSyD3s6OJpYDXIgCj0EZST4oOvKjVdsL8qLc";
-    $MAPS_KEY = "AIzaSyD0PS6SDd-KQ0fAIiGRK10mNAsXRSwbV50";
-    $GEO_API="AIzaSyAm5mFu-skF-aFf3aNNTo3K6YmZlN_-wLQ";
+    $API_KEY="";
+    $MAPS_KEY = "";
+    $GEO_API="";
     $PLACES_KEY=$API_KEY;
-
     $Category=array("default","cafe","bakery","restaurant", "beauty salon", "casino", "movie theater", "lodging", "airport", "train station","subway station", "bus station");
 
-
-
-    
-    
     if(isset($_POST["placeid"])){
         
-        $place = file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?placeid='.$_POST["placeid"].'&key='.$PLACES_KEY);
-        
+        $place = file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?placeid='.$_POST["placeid"].'&key='.$PLACES_KEY);     
         $placej = json_decode($place,true);
         
         if(array_key_exists("photos",$placej["result"])){
             $photoref = $placej["result"]["photos"];
-        
             for($i = 0; $i<5 && $i<count($photoref); $i++){
-                //echo $i;
-
                 $highref=file_get_contents('https://maps.googleapis.com/maps/api/place/photo?maxwidth=750&photoreference='.$photoref[$i]["photo_reference"].'&key='.$PLACES_KEY);
-
                 file_put_contents('image'.$i.'.jpg',$highref,LOCK_EX);
             }    
         }
         
-        //$highref = file_get_contents('https://maps.googleapis.com/maps/api/place/photo?maxwidth=750&photoreferene='.$photoref.'&key='.$PLACES_KEY);
-        
-        //echo getcwd();
+        //$highref = file_get_contents('https://maps.googleapis.com/maps/api/place/photo?maxwidth=750&photoreferene='.$photoref.'&key='.$PLACES_KEY);     
         echo json_encode($placej);
-        
-        //echo var_dump($placej["result"]["reviews"]);
-        
         exit();
     }
 
